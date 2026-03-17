@@ -1,10 +1,7 @@
-import streamlit
-from langchain_community.embeddings import HuggingFaceEmbeddings
-import configs.config_data as config
+import configs.config as config
 from dao.chroma_manager import get_chroma_connection
 
 
-@streamlit.cache_resource
 def get_vector_store():
     return VectorStoreService()
 

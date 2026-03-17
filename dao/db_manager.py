@@ -2,10 +2,6 @@ import sqlite3
 import json
 import os
 
-import streamlit
-
-
-@streamlit.cache_resource
 def get_db_manager():
     """
     全局单例模式获取 DBManager。

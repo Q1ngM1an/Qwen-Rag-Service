@@ -1,10 +1,8 @@
-import streamlit
 from langchain_chroma import Chroma
 
-import configs.config_data as config
+import configs.config as config
 from langchain_openai import OpenAIEmbeddings
 
-@streamlit.cache_resource
 def get_chroma_connection():
     embedding_model = OpenAIEmbeddings(
             model="embedding-model",  # 可以是任意名称

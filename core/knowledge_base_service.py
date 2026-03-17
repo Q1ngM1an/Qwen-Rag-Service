@@ -1,7 +1,7 @@
 import os
 from typing import List, Dict, Any
 
-import configs.config_data as config
+import configs.config as config
 import hashlib
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from datetime import datetime
