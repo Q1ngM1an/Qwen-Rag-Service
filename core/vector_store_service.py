@@ -1,11 +1,14 @@
+from functools import lru_cache
+
 import configs.config as config
 from dao.chroma_manager import get_chroma_connection
 
 
+@lru_cache(maxsize=1)
 def get_vector_store():
     return VectorStoreService()
 
-class VectorStoreService(object):
+class VectorStoreService:
     def __init__(self):
         self._chroma = get_chroma_connection()
 
@@ -22,5 +25,3 @@ class VectorStoreService(object):
         我们在这里把它“转发”给 self._chroma。
         """
         return getattr(self._chroma, item)
-
-

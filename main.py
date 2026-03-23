@@ -1,7 +1,11 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from router.file_router import router as file_router
+from router.knowledge_base_group_router import router as knowledge_base_group_router
+from router.knowledge_base_router import router as knowledge_base_router
 from router.qa_router import router as qa_router
-from router.rlhf_router import router as rlhf_router
+from router.rlhf_api_router import router as rlhf_router
+from router.session_scope_router import router as session_scope_router
 
 app = FastAPI(title="RAG-Service API")
 
@@ -16,6 +20,10 @@ app.add_middleware(
 
 app.include_router(qa_router)
 app.include_router(rlhf_router)
+app.include_router(file_router)
+app.include_router(knowledge_base_router)
+app.include_router(knowledge_base_group_router)
+app.include_router(session_scope_router)
 
 if __name__ == "__main__":
     import uvicorn

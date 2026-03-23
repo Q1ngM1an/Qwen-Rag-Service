@@ -2,8 +2,7 @@ from typing import Sequence
 from langchain_core.chat_history import BaseChatMessageHistory
 from langchain_core.messages import BaseMessage, message_to_dict, messages_from_dict
 
-from dao import db_manager
-from dao.db_manager import get_db_manager
+from dao.app_db_manager import get_db_manager
 
 
 def get_qa_chat_history(session_id: str):

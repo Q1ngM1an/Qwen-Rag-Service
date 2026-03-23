@@ -1,6 +1,6 @@
-from typing import List
+from typing import List, Literal, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 # --- 定义 DTO (Data Transfer Object) ---
 class SessionRequest(BaseModel):
