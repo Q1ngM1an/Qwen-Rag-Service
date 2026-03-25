@@ -27,7 +27,6 @@ similarity_threshold = 1
 allowed_upload_extensions = {".txt", ".pdf"}
 
 embedding_model_name = "embedding-model"
-embedding_model_path = embedding_model_name
 embedding_api_base = "http://localhost:8001/v1"
 embedding_api_key = "token-embed123"
 
