@@ -1,3 +1,4 @@
+import os
 import tempfile
 from pathlib import Path
 
@@ -6,6 +7,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 RUNTIME_DIR = Path(tempfile.gettempdir()) / "qwen-rag-runtime"
 FRONTEND_DIST_DIR = BASE_DIR / "frontend_dist"
 FRONTEND_DEV_DIST_DIR = BASE_DIR.parent.parent / "JsProject" / "qwen-rag-vue" / "dist"
+TIKTOKEN_CACHE_DIR = BASE_DIR / "tiktoken_cache"
+
+os.environ.setdefault("TIKTOKEN_CACHE_DIR", str(TIKTOKEN_CACHE_DIR))
 
 # App storage
 db_path = str(RUNTIME_DIR / "chat_data_runtime.db")
@@ -83,6 +87,7 @@ def get_frontend_dist_dir() -> Path | None:
 
 def ensure_runtime_directories() -> None:
     RUNTIME_DIR.mkdir(parents=True, exist_ok=True)
+    TIKTOKEN_CACHE_DIR.mkdir(parents=True, exist_ok=True)
     Path(output_directory).mkdir(parents=True, exist_ok=True)
     Path(file_storage_directory).mkdir(parents=True, exist_ok=True)
     Path(persist_directory).mkdir(parents=True, exist_ok=True)
