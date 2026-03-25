@@ -6,8 +6,13 @@ from core.vector_store_service import get_vector_store
 
 class VectorIndexService:
     def __init__(self, vector_store=None):
-        self.vector_store = vector_store or get_vector_store()
+        self.vector_store = vector_store
         self._splitter = None
+
+    def _get_vector_store(self):
+        if self.vector_store is None:
+            self.vector_store = get_vector_store()
+        return self.vector_store
 
     def _get_splitter(self):
         if self._splitter is None:
@@ -22,12 +27,13 @@ class VectorIndexService:
         return self._splitter
 
     def index_file(self, file_id: str, filename: str, text: str) -> int:
-        splitter = self._get_splitter()
-        chunks = (
-            splitter.split_text(text)
-            if len(text) > config.max_split_char_number
-            else [text]
-        )
+        if len(text) > config.max_split_char_number:
+            splitter = self._get_splitter()
+            chunks = splitter.split_text(text)
+        else:
+            chunks = [text]
+
+        vector_store = self._get_vector_store()
         timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         metadatas = [
             {
@@ -38,8 +44,8 @@ class VectorIndexService:
             for _ in chunks
         ]
         ids = [f"{file_id}:{index}" for index, _ in enumerate(chunks)]
-        self.vector_store.add_texts(chunks, metadatas=metadatas, ids=ids)
+        vector_store.add_texts(chunks, metadatas=metadatas, ids=ids)
         return len(chunks)
 
     def delete_file(self, file_id: str):
-        self.vector_store.delete(where={"file_id": file_id})
+        self._get_vector_store().delete(where={"file_id": file_id})

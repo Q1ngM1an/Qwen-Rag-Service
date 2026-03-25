@@ -1,24 +1,21 @@
-from typing import List, Literal, Optional
+from typing import List
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel
 
 # --- 定义 DTO (Data Transfer Object) ---
 class SessionRequest(BaseModel):
     session_id: str
 
 class QAStreamRequest(BaseModel):
-    session_id: str
     prompt: str
     selected_model: str = "qwen_0.6b"
 
 class RLHFStreamRequest(BaseModel):
-    session_id: str
     prompt: str
     temperature: float
-    selected_model: str
+    selected_model: str = "qwen_32b"
 
 class RLHFSavePreferenceRequest(BaseModel):
-    session_id: str
     prompt: str
     answers: List[str]          # 三个回答
     temperatures: List[float]   # 对应的温度

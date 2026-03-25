@@ -84,7 +84,10 @@ class FileService:
                 )
             except Exception as exc:
                 if storage_path.exists():
-                    storage_path.unlink()
+                    try:
+                        self._delete_storage_file(storage_path)
+                    except DependencyError:
+                        pass
                 raise DependencyError(f"Failed to index file: {exc}") from exc
 
             return {

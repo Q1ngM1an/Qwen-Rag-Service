@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from fastapi import Depends
 
+from controller.dashboard_controller import DashboardController
 from controller.file_controller import FileController
 from controller.knowledge_base_controller import KnowledgeBaseController
 from controller.knowledge_base_group_controller import KnowledgeBaseGroupController
@@ -27,10 +28,18 @@ def get_rag():
 
 # 自动装配 Controller
 # 相当于给类打上了 @Service 注解
-def get_qa_controller(db = Depends(get_db), rag = Depends(get_rag)) -> QAChatController:
+def get_qa_controller(db = Depends(get_db)) -> QAChatController:
+    return QAChatController(db)
+
+def get_qa_stream_controller(db = Depends(get_db), rag = Depends(get_rag)) -> QAChatController:
     return QAChatController(db, rag)
 
-def get_rlhf_controller(db = Depends(get_db), rag = Depends(get_rag)) -> RLHFCollectController:
+
+def get_rlhf_controller(db = Depends(get_db)) -> RLHFCollectController:
+    return RLHFCollectController(db)
+
+
+def get_rlhf_stream_controller(db = Depends(get_db), rag = Depends(get_rag)) -> RLHFCollectController:
     return RLHFCollectController(db, rag)
 
 
@@ -69,6 +78,13 @@ def _get_session_scope_service():
     return SessionScopeService(get_db_manager())
 
 
+@lru_cache(maxsize=1)
+def _get_dashboard_service():
+    from core.dashboard_overview_service import DashboardOverviewService
+
+    return DashboardOverviewService(get_db_manager())
+
+
 def get_file_controller() -> FileController:
     return FileController(_get_file_service())
 
@@ -83,3 +99,7 @@ def get_knowledge_base_group_controller() -> KnowledgeBaseGroupController:
 
 def get_session_scope_controller() -> SessionScopeController:
     return SessionScopeController(_get_session_scope_service())
+
+
+def get_dashboard_controller() -> DashboardController:
+    return DashboardController(_get_dashboard_service())

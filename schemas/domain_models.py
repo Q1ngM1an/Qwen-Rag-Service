@@ -93,3 +93,51 @@ class SessionKnowledgeBaseGroupItem(BaseModel):
 
 class UpdateSessionKnowledgeBaseGroupsRequest(BaseModel):
     knowledge_base_group_ids: list[str] = Field(default_factory=list)
+
+
+class DashboardCounts(BaseModel):
+    qa_sessions: int
+    rlhf_sessions: int
+    files: int
+    knowledge_bases: int
+    knowledge_packs: int
+
+
+class DashboardAssets(BaseModel):
+    files: int
+    knowledge_bases: int
+    knowledge_packs: int
+
+
+class VllmServiceStatusItem(BaseModel):
+    id: str
+    label: str
+    service_type: Literal["chat", "embedding"]
+    served_model: str
+    api_base: str
+    status: Literal["online", "degraded", "offline"]
+    latency_ms: Optional[int] = None
+    message: Optional[str] = None
+
+
+class GpuMemoryItem(BaseModel):
+    index: int
+    name: str
+    memory_used_mb: int
+    memory_total_mb: int
+    utilization_gpu_percent: int
+
+
+class GpuMemoryOverview(BaseModel):
+    status: Literal["ok", "unavailable"]
+    total_used_mb: int
+    total_mb: int
+    utilization_percent: int
+    gpus: list[GpuMemoryItem] = Field(default_factory=list)
+
+
+class DashboardOverview(BaseModel):
+    counts: DashboardCounts
+    assets: DashboardAssets
+    vllm_services: list[VllmServiceStatusItem] = Field(default_factory=list)
+    gpu_memory: GpuMemoryOverview

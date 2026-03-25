@@ -1,6 +1,3 @@
-import io
-import uuid
-
 from controller.base_chat_controller import BaseChatController
 
 class QAChatController(BaseChatController):
@@ -8,11 +5,14 @@ class QAChatController(BaseChatController):
 
     TABLE_NAME = "qa_history"
 
+    def create_session(self):
+        return self.create_session_stub("新建问答会话")
+
     def get_sidebar_sessions(self):
         return self.get_session_list(self.TABLE_NAME)
 
     def get_session_history(self, session_id):
-        return self.db.get_messages(self.TABLE_NAME, session_id)
+        return self.serialize_history(session_id, self.db.get_messages(self.TABLE_NAME, session_id))
 
     def delete_session(self, session_id):
         return self.db.clear_session(self.TABLE_NAME, session_id)

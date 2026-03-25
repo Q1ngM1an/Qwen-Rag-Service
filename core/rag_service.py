@@ -1,6 +1,7 @@
 import os
 import re
 
+import configs.config as config
 from langchain_core.documents import Document
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough, RunnableWithMessageHistory, RunnableLambda
@@ -54,10 +55,13 @@ class RagService(object):
         # vllm serve ./ChatModel/qwen32b --port 8004 --served-model-name qwen32b --api-key token-qwen32b123 --gpu-memory-utilization 0.2 --hf_overrides '{"rope_parameters": {"rope_theta": 1000000, "rope_type": "yarn", "factor": 4.0, "original_max_position_embeddings": 40960}, "max_model_len":  81920}' 
 
         # 使用 OpenAI 兼容接口
+        small_service = config.get_vllm_service("qwen06b")
+        large_service = config.get_vllm_service("qwen32b")
+
         self.qwen_model_600m = ChatOpenAI(
-            model="qwen06b",  # 可以是任意名称
-            openai_api_base="http://localhost:8002/v1",
-            openai_api_key="token-qwen06b123",  # vLLM 不需要密钥，但需要传一个值
+            model=small_service["served_model"],
+            openai_api_base=small_service["api_base"],
+            openai_api_key=small_service["api_key"],
             temperature=0.8,
             max_tokens=4096,
         )
@@ -71,9 +75,9 @@ class RagService(object):
         # )
 
         self.qwen_model_32b = ChatOpenAI(
-            model="qwen06b",  # 可以是任意名称
-            openai_api_base="http://localhost:8002/v1",
-            openai_api_key="token-qwen06b123",  # vLLM 不需要密钥，但需要传一个值
+            model=large_service["served_model"],
+            openai_api_base=large_service["api_base"],
+            openai_api_key=large_service["api_key"],
             temperature=0.8,
             max_tokens=4096,
         )

@@ -1,9 +1,11 @@
-import json
 import io
+import json
+import uuid
+from datetime import datetime
 
 class BaseChatController:
 
-    def __init__(self, db_manager, rag_service):
+    def __init__(self, db_manager, rag_service=None):
         self.db = db_manager
         self.rag = rag_service
 
@@ -26,6 +28,26 @@ class BaseChatController:
             # 实际项目中这里可以使用 logging
             print(f"读取历史失败: {e}")
             return []
+
+    def create_session_stub(self, title: str = "新会话"):
+        return {
+            "id": str(uuid.uuid4()),
+            "title": title,
+            "time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        }
+
+    def serialize_history(self, session_id, messages):
+        normalized = []
+        for index, msg in enumerate(messages):
+            role = msg.get("type") or msg.get("role") or "assistant"
+            normalized.append(
+                {
+                    "id": f"{session_id}-{index}",
+                    "role": "user" if role in ["human", "user"] else "assistant",
+                    "content": msg.get("data", {}).get("content") or msg.get("content", ""),
+                }
+            )
+        return normalized
 
     def get_sidebar_sessions(self):
         raise NotImplementedError()
